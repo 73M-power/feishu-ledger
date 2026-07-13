@@ -1,0 +1,37 @@
+name: monthly-ledger-summary
+
+on:
+  schedule:
+    # 00:10 UTC = Beijing 08:10, first day of each month
+    - cron: "10 0 1 * *"
+  workflow_dispatch:
+    inputs:
+      month:
+        description: "Month to send, format YYYY-MM. Empty means previous month."
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Push monthly ledger summary
+        env:
+          FEISHU_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK }}
+          LEDGER_DATA_DIR: data
+          MONTH: ${{ github.event.inputs.month }}
+        run: |
+          if [ -n "$MONTH" ]; then
+            python notify.py --month "$MONTH"
+          else
+            python notify.py --previous-month
+          fi

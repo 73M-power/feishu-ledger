@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: feishu-ledger
+    runtime: docker
+    plan: starter
+    autoDeploy: true
+    healthCheckPath: /healthz
+    envVars:
+      - key: TZ
+        value: Asia/Shanghai
+      - key: PORT
+        value: 8787
+      - key: LEDGER_DATA_DIR
+        value: /app/data
+      - key: FEISHU_REPLY_ENABLED
+        value: "1"
+      - key: FEISHU_APP_ID
+        sync: false
+      - key: FEISHU_APP_SECRET
+        sync: false
+      - key: FEISHU_VERIFICATION_TOKEN
+        sync: false
+      - key: CF_TUNNEL_TOKEN
+        sync: false
+    disk:
+      name: feishu-ledger-data
+      mountPath: /app/data
+      sizeGB: 1

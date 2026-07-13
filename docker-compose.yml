@@ -1,0 +1,24 @@
+services:
+  feishu-ledger:
+    build: .
+    container_name: feishu-ledger
+    restart: always
+    ports:
+      - "8787:8787"
+    volumes:
+      - feishu_ledger_data:/app/data
+    environment:
+      - TZ=Asia/Shanghai
+      - PORT=8787
+      - LEDGER_DATA_DIR=/app/data
+      # Feishu app credentials
+      - FEISHU_APP_ID=
+      - FEISHU_APP_SECRET=
+      - FEISHU_VERIFICATION_TOKEN=
+      - FEISHU_REPLY_ENABLED=1
+      # Optional: expose the local service through a Cloudflare Tunnel
+      - CF_TUNNEL_TOKEN=
+
+volumes:
+  feishu_ledger_data:
+    driver: local
